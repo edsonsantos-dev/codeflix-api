@@ -27,16 +27,6 @@ public class CategoryTestFixture : BaseFixture
         var categoryDescription = Faker.Commerce.ProductDescription();
         return categoryDescription.Length < 10000 ? categoryDescription : categoryDescription[..10000];
     }
-
-    public string GetInvalidCategoryName()
-    {
-        var categoryName = string.Empty;
-
-        while (categoryName.Length < 255)
-            categoryName = Faker.Commerce.Categories(1)[0];
-
-        return categoryName;
-    }
 }
 
 [CollectionDefinition(nameof(CategoryTestFixture))]
