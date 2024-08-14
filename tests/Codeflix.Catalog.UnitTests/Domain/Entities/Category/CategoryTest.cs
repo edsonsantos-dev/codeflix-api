@@ -1,20 +1,18 @@
 ﻿using Codeflix.Catalog.Domain.Exceptions;
+using Codeflix.Catalog.UnitTests.Domain.Fixturies;
 using FluentAssertions;
 
 namespace Codeflix.Catalog.UnitTests.Domain.Entities.Category;
 
 [Trait("Domain", "Catetory - Aggregates")]
-public class CategoryTest
+[Collection(nameof(CategoryTestFixture))]
+public class CategoryTest(CategoryTestFixture categoryTestFixture)
 {
     [Fact(DisplayName = nameof(Instantiate))]
     public void Instantiate()
     {
         //Arrange
-        var validData = new
-        {
-            Name = "category name",
-            Description = "category description"
-        };
+        var validData = categoryTestFixture.GetValidCategory();
 
         //Act
         var datetimeBefore = DateTime.Now;
@@ -37,11 +35,7 @@ public class CategoryTest
     public void InstantiateWithIsActive(bool isActive)
     {
         //Arrange
-        var validData = new
-        {
-            Name = "category name",
-            Description = "category description"
-        };
+        var validData = categoryTestFixture.GetValidCategory();
 
         //Act
         var datetimeBefore = DateTime.Now;
@@ -65,7 +59,8 @@ public class CategoryTest
     public void InstantiateErrorWhenNameIsEmpty(string? name)
     {
         //Arrange
-        Action action = () => new Catalog.Domain.Entities.Category(name, "Category Description");
+        var validCategory = categoryTestFixture.GetValidCategory();
+        Action action = () => new Catalog.Domain.Entities.Category(name, validCategory.Description);
 
         //Act
         //Assert
@@ -78,7 +73,8 @@ public class CategoryTest
     public void InstantiateErrorWhenDescriptionIsNull()
     {
         //Arrange
-        Action action = () => new Catalog.Domain.Entities.Category("Category Name", null);
+        var validCategory = categoryTestFixture.GetValidCategory();
+        Action action = () => new Catalog.Domain.Entities.Category(validCategory.Name, null);
 
         //Act
         //Assert
@@ -95,7 +91,8 @@ public class CategoryTest
     public void InstantiateErrorWhenNameIsLessThan3Characters(string? name)
     {
         //Arrange
-        Action action = () => new Catalog.Domain.Entities.Category(name, "Category Description");
+        var validCategory = categoryTestFixture.GetValidCategory();
+        Action action = () => new Catalog.Domain.Entities.Category(name, validCategory.Description);
 
         //Act
         //Assert
@@ -108,9 +105,11 @@ public class CategoryTest
     public void InstantiateErrorWhenNameIsGreaterThan255Characters()
     {
         //Arrange
+        var validCategory = categoryTestFixture.GetValidCategory();
+        var invalidName = categoryTestFixture.Faker.Lorem.Letter(256);
         Action action = () => new Catalog.Domain.Entities.Category(
-            "Jornadas Épicas que Transcendem o Tempo e o Espaço: Uma Odisseia Cinematográfica Através de Mundos Fantásticos, Realidades Alternativas e Universos Paralelos, Onde Heróis Enfrentam Desafios Monumentais e Descobrem o Verdadeiro Significado da Coragem, da Amizade e do Amor em Uma Luta Infinita Contra as Forças do Mal",
-            "Category Description");
+            invalidName,
+            validCategory.Description);
 
         //Act
         //Assert
@@ -123,8 +122,9 @@ public class CategoryTest
     public void InstantiateErrorWhenDescriptionIsGreaterThan10000Characters()
     {
         //Arrange
-        var invalidDescription = string.Join(null, Enumerable.Range(1, 10001).Select(_ => "a"));
-        Action action = () => new Catalog.Domain.Entities.Category("Category Name", invalidDescription);
+        var validCategory = categoryTestFixture.GetValidCategory();
+        var invalidDescription = categoryTestFixture.Faker.Lorem.Letter(10001);
+        Action action = () => new Catalog.Domain.Entities.Category(validCategory.Name, invalidDescription);
 
         //Act
         //Assert
@@ -137,12 +137,7 @@ public class CategoryTest
     public void Activate()
     {
         //Arrange
-        var validData = new
-        {
-            Name = "Category name",
-            Description = "Category description"
-        };
-
+        var validData = categoryTestFixture.GetValidCategory();
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description, false);
 
         //Act
@@ -156,12 +151,7 @@ public class CategoryTest
     public void Deactivate()
     {
         //Arrange
-        var validData = new
-        {
-            Name = "Category name",
-            Description = "Category description"
-        };
-
+        var validData = categoryTestFixture.GetValidCategory();
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description);
 
         //Act
@@ -175,17 +165,8 @@ public class CategoryTest
     public void Update()
     {
         //Arrange
-        var validData = new
-        {
-            Name = "Category name",
-            Description = "Category description"
-        };
-
-        var newValues = new
-        {
-            Name = "New name",
-            Description = "New description"
-        };
+        var validData = categoryTestFixture.GetValidCategory();
+        var newValues = categoryTestFixture.GetValidCategory();
 
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description);
 
@@ -201,16 +182,8 @@ public class CategoryTest
     public void UpdateOnlyName()
     {
         //Arrange
-        var validData = new
-        {
-            Name = "Category name",
-            Description = "Category description"
-        };
-
-        var newValues = new
-        {
-            Name = "New name",
-        };
+        var validData = categoryTestFixture.GetValidCategory();
+        var newValues = categoryTestFixture.GetValidCategory();
 
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description);
         var currentDescription = category.Description;
@@ -230,7 +203,7 @@ public class CategoryTest
     public void UpdateErrorWhenNameIsEmpty(string? name)
     {
         //Arrange
-        var category = new Catalog.Domain.Entities.Category("Category Name", "Category Description");
+        var category = categoryTestFixture.GetValidCategory();
         Action action = () => category.Update(name);
 
         //Act
@@ -248,7 +221,7 @@ public class CategoryTest
     public void UpdateErrorWhenNameIsLessThan3Characters(string? name)
     {
         //Arrange
-        var category = new Catalog.Domain.Entities.Category("Category Name", "Category Description");
+        var category = categoryTestFixture.GetValidCategory();
         Action action = () => category.Update(name);
 
         //Act
@@ -262,10 +235,10 @@ public class CategoryTest
     public void UpdateErrorWhenNameIsGreaterThan255Characters()
     {
         //Arrange
-        var category = new Catalog.Domain.Entities.Category("Category Name", "Category Description");
+        var category = categoryTestFixture.GetValidCategory();
+        var invalidName = categoryTestFixture.Faker.Lorem.Letter(256);
         Action action = () =>
-            category.Update(
-                "Jornadas Épicas que Transcendem o Tempo e o Espaço: Uma Odisseia Cinematográfica Através de Mundos Fantásticos, Realidades Alternativas e Universos Paralelos, Onde Heróis Enfrentam Desafios Monumentais e Descobrem o Verdadeiro Significado da Coragem, da Amizade e do Amor em Uma Luta Infinita Contra as Forças do Mal");
+            category.Update(invalidName);
 
         //Act
         //Assert
@@ -278,8 +251,8 @@ public class CategoryTest
     public void UpdateErrorWhenDescriptionIsGreaterThan10000Characters()
     {
         //Arrange
-        var invalidDescription = string.Join(null, Enumerable.Range(1, 10001).Select(_ => "a"));
-        var category = new Catalog.Domain.Entities.Category("Category Name", "Category Description");
+        var invalidDescription = categoryTestFixture.Faker.Lorem.Letter(10001);
+        var category = categoryTestFixture.GetValidCategory();
         Action action = () => category.Update(category.Name, invalidDescription);
 
         //Act

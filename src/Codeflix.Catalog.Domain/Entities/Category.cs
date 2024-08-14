@@ -9,14 +9,16 @@ public class Category : AggregateRoot
     public string Description { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; set; }
-    
-    public Category(string name, string description, bool isActive = true) : base()
+
+    protected Category() { }
+
+    public Category(string name, string description, bool isActive = true)
     {
         Name = name;
         Description = description;
         IsActive = isActive;
         CreatedAt = DateTime.Now;
-        
+
         Validate();
     }
 
@@ -25,7 +27,7 @@ public class Category : AggregateRoot
         IsActive = true;
         Validate();
     }
-    
+
     public void Deactivate()
     {
         IsActive = false;
@@ -38,7 +40,7 @@ public class Category : AggregateRoot
         Description = description ?? Description;
         Validate();
     }
-    
+
     private void Validate()
     {
         if (string.IsNullOrWhiteSpace(Name))
@@ -49,10 +51,10 @@ public class Category : AggregateRoot
 
         if (Name.Length > 255)
             throw new EntityValidationException("Name should be less or equal 255 characters long");
-        
+
         if (Description == null)
             throw new EntityValidationException("Description should not be null");
-        
+
         if (Description.Length > 10000)
             throw new EntityValidationException("Description should be less or equal 10.000 characters long");
     }
