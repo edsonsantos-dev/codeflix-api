@@ -66,7 +66,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         //Assert
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Name should not be empty or null");
+            .WithMessage("Name should not be null or empty");
     }
 
     [Fact(DisplayName = nameof(InstantiateErrorWhenDescriptionIsNull))]
@@ -123,7 +123,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         //Assert
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Name should be less or equal 255 characters long");
+            .WithMessage("Name should be greater than 255 characters long");
     }
 
     [Fact(DisplayName = nameof(InstantiateErrorWhenDescriptionIsGreaterThan10000Characters))]
@@ -138,7 +138,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         //Assert
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Description should be less or equal 10.000 characters long");
+            .WithMessage("Description should be greater than 10000 characters long");
     }
 
     [Fact(DisplayName = nameof(Activate))]
@@ -218,7 +218,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         //Assert
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Name should not be empty or null");
+            .WithMessage("Name should not be null or empty");
     }
 
     [Theory(DisplayName = nameof(UpdateErrorWhenNameIsLessThan3Characters))]
@@ -252,7 +252,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         //Assert
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Name should be less or equal 255 characters long");
+            .WithMessage("Name should be greater than 255 characters long");
     }
 
     [Fact(DisplayName = nameof(UpdateErrorWhenDescriptionIsGreaterThan10000Characters))]
@@ -267,6 +267,6 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         //Assert
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Description should be less or equal 10.000 characters long");
+            .WithMessage("Description should be greater than 10000 characters long");
     }
 }
