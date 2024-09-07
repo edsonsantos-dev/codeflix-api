@@ -47,7 +47,7 @@ public class Category : AggregateRoot
             throw new EntityValidationException("Name should not be empty or null");
 
         if (Name.Trim().Length < 3)
-            throw new EntityValidationException("Name should be at leats 3 characters long");
+            throw new EntityValidationException("Name should be at least 3 characters long");
 
         if (Name.Length > 255)
             throw new EntityValidationException("Name should be less or equal 255 characters long");

@@ -19,6 +19,12 @@ public class DomainValidation
     public static void MinLength(string target, int minLength, string fieldName)
     {
         if (target.Length < minLength)
-            throw new EntityValidationException($"{fieldName} should be at leats {minLength} characters long");
+            throw new EntityValidationException($"{fieldName} should be at less {minLength} characters long");
+    }
+
+    public static void MaxLength(string target, int maxLength, string fieldName)
+    {
+        if (target.Length > maxLength)
+            throw new EntityValidationException($"{fieldName} should be greater than {maxLength} characters long");
     }
 }

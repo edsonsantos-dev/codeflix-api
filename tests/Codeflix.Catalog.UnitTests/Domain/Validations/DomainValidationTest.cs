@@ -88,7 +88,7 @@ public class DomainValidationTest
         //Act
         //Assert
         action.Should().Throw<EntityValidationException>()
-            .WithMessage($"FieldName should be at leats {minLength} characters long");
+            .WithMessage($"FieldName should be at least {minLength} characters long");
     }
 
     public static IEnumerable<object[]> GetValuesSmallerThanTheMin(int numberOfTests = 6)
@@ -100,6 +100,41 @@ public class DomainValidationTest
             var target = faker.Commerce.ProductName();
             var minLength = target.Length + new Random().Next(1, 20);
             yield return [target, minLength];
+        }
+    }
+    
+    [Fact(DisplayName = nameof(MaxLengthOk))]
+    public void MaxLengthOk()
+    {
+        //Arrange
+        var value = Faker.Commerce.ProductName();
+
+        //Act
+        var action = () => DomainValidation.MaxLength(value, maxLength: 500, "FieldName");
+
+        //Assert
+        action.Should().NotThrow();
+    }
+
+    [Theory(DisplayName = nameof(MaxlengthThrowWhenLess))]
+    [MemberData(nameof(GetValuesGreaterThanMax), parameters: 10)]
+    public void MaxlengthThrowWhenLess(string target, int maxLength)
+    {
+        var action = () => DomainValidation.MaxLength(target, maxLength, "FieldName");
+        
+        action.Should().Throw<EntityValidationException>()
+            .WithMessage($"FieldName should be greater than {maxLength} characters long");
+    }
+    
+    public static IEnumerable<object[]> GetValuesGreaterThanMax(int numberOfTests = 6)
+    {
+        var faker = new Faker();
+
+        for (var i = 0; i < numberOfTests; i++)
+        {
+            var target = faker.Commerce.ProductName();
+            var maxLength = target.Length - new Random().Next(1, 20);
+            yield return [target, maxLength];
         }
     }
 }
