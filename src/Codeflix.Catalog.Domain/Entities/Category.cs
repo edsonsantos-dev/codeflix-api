@@ -1,5 +1,4 @@
-﻿using Codeflix.Catalog.Domain.Exceptions;
-using Codeflix.Catalog.Domain.SeedWork;
+﻿using Codeflix.Catalog.Domain.SeedWork;
 using Codeflix.Catalog.Domain.Validations;
 
 namespace Codeflix.Catalog.Domain.Entities;
@@ -9,7 +8,7 @@ public class Category : AggregateRoot
     public string Name { get; private set; }
     public string Description { get; private set; }
     public bool IsActive { get; private set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedOn { get; set; }
 
     protected Category()
     {
@@ -20,7 +19,7 @@ public class Category : AggregateRoot
         Name = name;
         Description = description;
         IsActive = isActive;
-        CreatedAt = DateTime.Now;
+        CreatedOn = DateTime.Now;
 
         Validate();
     }

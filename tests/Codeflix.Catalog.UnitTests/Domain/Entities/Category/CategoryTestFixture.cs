@@ -1,10 +1,10 @@
-﻿using Codeflix.Catalog.Domain.Entities;
+﻿using Codeflix.Catalog.UnitTests.Common;
 
-namespace Codeflix.Catalog.UnitTests.Domain.Fixturies;
+namespace Codeflix.Catalog.UnitTests.Domain.Entities.Category;
 
 public class CategoryTestFixture : BaseFixture
 {
-    public Category GetValidCategory() => new(
+    public Catalog.Domain.Entities.Category GetValidCategory() => new(
         GetValidCategoryName(),
         GetValidCategoryDescription()
     );

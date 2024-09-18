@@ -1,18 +1,17 @@
 ﻿using Codeflix.Catalog.Domain.Exceptions;
-using Codeflix.Catalog.UnitTests.Domain.Fixturies;
 using FluentAssertions;
 
 namespace Codeflix.Catalog.UnitTests.Domain.Entities.Category;
 
 [Trait("Domain", "Catetory - Aggregates")]
 [Collection(nameof(CategoryTestFixture))]
-public class CategoryTest(CategoryTestFixture categoryTestFixture)
+public class CategoryTest(CategoryTestFixture fixture)
 {
     [Fact(DisplayName = nameof(Instantiate))]
     public void Instantiate()
     {
         //Arrange
-        var validData = categoryTestFixture.GetValidCategory();
+        var validData = fixture.GetValidCategory();
 
         //Act
         var datetimeBefore = DateTime.Now;
@@ -24,9 +23,9 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         category.Name.Should().Be(validData.Name);
         category.Description.Should().Be(validData.Description);
         category.Id.Should().NotBeEmpty();
-        category.CreatedAt.Should().NotBeSameDateAs(default);
+        category.CreatedOn.Should().NotBeSameDateAs(default);
         category.IsActive.Should().BeTrue();
-        (category.CreatedAt >= datetimeBefore && category.CreatedAt <= datetimeAfter).Should().BeTrue();
+        (category.CreatedOn >= datetimeBefore && category.CreatedOn <= datetimeAfter).Should().BeTrue();
     }
 
     [Theory(DisplayName = nameof(InstantiateWithIsActive))]
@@ -35,7 +34,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void InstantiateWithIsActive(bool isActive)
     {
         //Arrange
-        var validData = categoryTestFixture.GetValidCategory();
+        var validData = fixture.GetValidCategory();
 
         //Act
         var datetimeBefore = DateTime.Now;
@@ -47,9 +46,9 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
         category.Name.Should().Be(validData.Name);
         category.Description.Should().Be(validData.Description);
         category.Id.Should().NotBeEmpty();
-        category.CreatedAt.Should().NotBeSameDateAs(default);
+        category.CreatedOn.Should().NotBeSameDateAs(default);
         category.IsActive.Should().Be(isActive);
-        (category.CreatedAt >= datetimeBefore && category.CreatedAt <= datetimeAfter).Should().BeTrue();
+        (category.CreatedOn >= datetimeBefore && category.CreatedOn <= datetimeAfter).Should().BeTrue();
     }
 
     [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsEmpty))]
@@ -59,7 +58,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void InstantiateErrorWhenNameIsEmpty(string? name)
     {
         //Arrange
-        var validCategory = categoryTestFixture.GetValidCategory();
+        var validCategory = fixture.GetValidCategory();
         Action action = () => new Catalog.Domain.Entities.Category(name, validCategory.Description);
 
         //Act
@@ -73,7 +72,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void InstantiateErrorWhenDescriptionIsNull()
     {
         //Arrange
-        var validCategory = categoryTestFixture.GetValidCategory();
+        var validCategory = fixture.GetValidCategory();
         Action action = () => new Catalog.Domain.Entities.Category(validCategory.Name, null);
 
         //Act
@@ -88,7 +87,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void InstantiateErrorWhenNameIsLessThan3Characters(string? name)
     {
         //Arrange
-        var validCategory = categoryTestFixture.GetValidCategory();
+        var validCategory = fixture.GetValidCategory();
         Action action = () => new Catalog.Domain.Entities.Category(name, validCategory.Description);
 
         //Act
@@ -113,8 +112,8 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void InstantiateErrorWhenNameIsGreaterThan255Characters()
     {
         //Arrange
-        var validCategory = categoryTestFixture.GetValidCategory();
-        var invalidName = categoryTestFixture.Faker.Lorem.Letter(256);
+        var validCategory = fixture.GetValidCategory();
+        var invalidName = fixture.Faker.Lorem.Letter(256);
         Action action = () => new Catalog.Domain.Entities.Category(
             invalidName,
             validCategory.Description);
@@ -130,8 +129,8 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void InstantiateErrorWhenDescriptionIsGreaterThan10000Characters()
     {
         //Arrange
-        var validCategory = categoryTestFixture.GetValidCategory();
-        var invalidDescription = categoryTestFixture.Faker.Lorem.Letter(10001);
+        var validCategory = fixture.GetValidCategory();
+        var invalidDescription = fixture.Faker.Lorem.Letter(10001);
         Action action = () => new Catalog.Domain.Entities.Category(validCategory.Name, invalidDescription);
 
         //Act
@@ -145,7 +144,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void Activate()
     {
         //Arrange
-        var validData = categoryTestFixture.GetValidCategory();
+        var validData = fixture.GetValidCategory();
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description, false);
 
         //Act
@@ -159,7 +158,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void Deactivate()
     {
         //Arrange
-        var validData = categoryTestFixture.GetValidCategory();
+        var validData = fixture.GetValidCategory();
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description);
 
         //Act
@@ -173,8 +172,8 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void Update()
     {
         //Arrange
-        var validData = categoryTestFixture.GetValidCategory();
-        var newValues = categoryTestFixture.GetValidCategory();
+        var validData = fixture.GetValidCategory();
+        var newValues = fixture.GetValidCategory();
 
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description);
 
@@ -190,8 +189,8 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void UpdateOnlyName()
     {
         //Arrange
-        var validData = categoryTestFixture.GetValidCategory();
-        var newValues = categoryTestFixture.GetValidCategory();
+        var validData = fixture.GetValidCategory();
+        var newValues = fixture.GetValidCategory();
 
         var category = new Catalog.Domain.Entities.Category(validData.Name, validData.Description);
         var currentDescription = category.Description;
@@ -211,7 +210,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void UpdateErrorWhenNameIsEmpty(string? name)
     {
         //Arrange
-        var category = categoryTestFixture.GetValidCategory();
+        var category = fixture.GetValidCategory();
         Action action = () => category.Update(name);
 
         //Act
@@ -229,7 +228,7 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void UpdateErrorWhenNameIsLessThan3Characters(string? name)
     {
         //Arrange
-        var category = categoryTestFixture.GetValidCategory();
+        var category = fixture.GetValidCategory();
         Action action = () => category.Update(name);
 
         //Act
@@ -243,8 +242,8 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void UpdateErrorWhenNameIsGreaterThan255Characters()
     {
         //Arrange
-        var category = categoryTestFixture.GetValidCategory();
-        var invalidName = categoryTestFixture.Faker.Lorem.Letter(256);
+        var category = fixture.GetValidCategory();
+        var invalidName = fixture.Faker.Lorem.Letter(256);
         Action action = () =>
             category.Update(invalidName);
 
@@ -259,8 +258,8 @@ public class CategoryTest(CategoryTestFixture categoryTestFixture)
     public void UpdateErrorWhenDescriptionIsGreaterThan10000Characters()
     {
         //Arrange
-        var invalidDescription = categoryTestFixture.Faker.Lorem.Letter(10001);
-        var category = categoryTestFixture.GetValidCategory();
+        var invalidDescription = fixture.Faker.Lorem.Letter(10001);
+        var category = fixture.GetValidCategory();
         Action action = () => category.Update(category.Name, invalidDescription);
 
         //Act
